@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ command }) => {
   return {
     plugins: [react()],
-    base: command === 'build' ? '/react-task-week2/' : '/',
+    base: command === 'build' ? '/react-task-week3/' : '/',
     css: {
       preprocessorOptions: {
         scss: {
