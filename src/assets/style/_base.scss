@@ -1,0 +1,66 @@
+
+.all-bg {
+    
+    position: relative;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden; 
+    background-color: #000; 
+
+    &::after {
+        content: "";
+        position: absolute;
+        width: 100vmax;
+        height: 100vmax;
+        top: 50%;
+        left: 50%;
+        
+        background-image: url('../images/milad-fakurian-oaUyvNPU5lc-unsplash.jpg');
+        background-position: center;
+        background-size: cover;
+        animation: rotateBackground 35s linear  infinite alternate;
+    }
+}
+
+@keyframes rotateBackground {
+    0%   { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+    10%  { transform: translate(-49%, -50%) rotate(10deg) scale(1.05); }
+    20%  { transform: translate(-48%, -51%) rotate(20deg) scale(1.1); }
+    30%  { transform: translate(-47%, -50%) rotate(30deg) scale(1.05); }
+    40%  { transform: translate(-49%, -52%) rotate(40deg) scale(1.12); }
+    50%  { transform: translate(-48%, -51%) rotate(50deg) scale(1.2); }
+    60%  { transform: translate(-44%, -56%) rotate(60deg) scale(1.1); }
+    70%  { transform: translate(-48%, -52%) rotate(70deg) scale(0.8); }
+    80%  { transform: translate(-49%, -51%) rotate(80deg) scale(1); }
+    90%  { transform: translate(-48%, -50%) rotate(90deg) scale(1.03); }
+    100% { transform: translate(-50%, -50%) rotate(100deg) scale(1); }
+}
+
+
+.all-bg-blur {
+    position: fixed;  
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.041); 
+    backdrop-filter: blur(20px);
+    z-index: -1; 
+    pointer-events: none; 
+}
+
+
+
+img{
+    max-width: 100%;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+
+}
+

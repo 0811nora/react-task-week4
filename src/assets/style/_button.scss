@@ -1,0 +1,50 @@
+/* From Uiverse.io by Navarog21 */ 
+.btn-blueLg {
+    width: 10em;
+    position: relative;
+    height: 3.5em;
+    border: 3px ridge #149CEA;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    transition: .4s;
+    border-radius: 0.3em;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+
+.btn-blueLg:hover::before, .btn-blueLg:hover::after {
+    transform: scale(0)
+}
+
+.btn-blueLg:hover {
+    box-shadow: inset 0px 0px 40px #1479EA;
+}
+
+.btn-blueSm {
+    width: 5em;
+    position: relative;
+    height: 2.5em;
+    border: 3px ridge #149CEA;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    transition: .4s;
+    border-radius: 0.3em;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+
+.btn-blueSm:hover::before, .btn-blueSm:hover::after {
+    transform: scale(0)
+}
+
+.btn-blueSm:hover {
+    box-shadow: inset 0px 0px 40px #1479EA;
+}
