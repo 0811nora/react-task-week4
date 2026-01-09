@@ -15,12 +15,15 @@
     &::after {
         content: "";
         position: absolute;
-        width: 100vmax;
-        height: 100vmax;
+        width: 150vmax;
+        height: 150vmax;
         top: 50%;
         left: 50%;
         
-        background-image: url('../images/milad-fakurian-oaUyvNPU5lc-unsplash.jpg');
+        // background-image: url('../images/milad-fakurian-oaUyvNPU5lc-unsplash.jpg');
+        // background-image: url('../images/andy-holmes-rCbdp8VCYhQ-unsplash.jpg');
+        background-image: url('../images/david-foodphototasty-ggvytBO8ru0-unsplash.jpg');
+        // background-image: url('../images/monkey-sexy-LNHyPbfEE7Y-unsplash.jpg');
         background-position: center;
         background-size: cover;
         animation: rotateBackground 35s linear  infinite alternate;
@@ -35,8 +38,8 @@
     40%  { transform: translate(-49%, -52%) rotate(40deg) scale(1.12); }
     50%  { transform: translate(-48%, -51%) rotate(50deg) scale(1.2); }
     60%  { transform: translate(-44%, -56%) rotate(60deg) scale(1.1); }
-    70%  { transform: translate(-48%, -52%) rotate(70deg) scale(0.8); }
-    80%  { transform: translate(-49%, -51%) rotate(80deg) scale(1); }
+    70%  { transform: translate(-48%, -52%) rotate(70deg) scale(1); }
+    80%  { transform: translate(-49%, -51%) rotate(80deg) scale(1.05); }
     90%  { transform: translate(-48%, -50%) rotate(90deg) scale(1.03); }
     100% { transform: translate(-50%, -50%) rotate(100deg) scale(1); }
 }
@@ -49,7 +52,7 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.041); 
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
     z-index: -1; 
     pointer-events: none; 
 }
@@ -61,6 +64,5 @@ img{
     object-fit: cover;
     height: 100%;
     width: 100%;
-
 }
 

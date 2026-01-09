@@ -3,7 +3,7 @@
     width: 10em;
     position: relative;
     height: 3.5em;
-    border: 3px ridge #149CEA;
+    border: 5px ridge #858585;
     outline: none;
     background-color: transparent;
     color: white;
@@ -21,14 +21,15 @@
 }
 
 .btn-blueLg:hover {
-    box-shadow: inset 0px 0px 40px #1479EA;
+    box-shadow: inset 0px 0px 40px #bebebe;
 }
 
 .btn-blueSm {
     width: 5em;
     position: relative;
     height: 2.5em;
-    border: 3px ridge #149CEA;
+    // border: 3px ridge #149CEA;
+    border: 3px ridge #222222;
     outline: none;
     background-color: transparent;
     color: white;
@@ -46,5 +47,168 @@
 }
 
 .btn-blueSm:hover {
-    box-shadow: inset 0px 0px 40px #1479EA;
+    box-shadow: inset 0px 0px 40px #7c7c7c;
 }
+
+.btn-dark-light{
+    background-color: #2e2e2e;
+    color: $white;
+    transition: .4s;
+
+    &:hover{
+        background-color: #505050;
+    }
+}
+
+
+
+// .button-edit {
+//     background-color: #32523e;
+//     color: #3b82f6;
+//     border: none;
+//     cursor: pointer;
+//     border-radius: 8px;
+//     width: 100px;
+//     height: 45px;
+//     transition: 0.3s;
+// }
+
+// .button-edit:hover {
+//     background-color: #3b82f6;
+//     box-shadow: 0 0 0 5px #3b83f65f;
+//     color: #fff;
+// }
+
+
+.btn-log {
+    position: relative;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(45deg, #0ce39a, #69007f, #fc0987);
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-logout{
+    padding: 8px 20px;
+}
+
+.btn-login{
+    padding: 16px 50px;
+}
+
+.btn-log span {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-log::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: #272727;
+    border-radius: 9px;
+    transition: 0.5s;
+}
+
+.btn-log:hover::before {
+    opacity: 0.7;
+}
+
+.btn-log::after {
+    content: "";
+    position: absolute;
+    inset: 0px;
+    background: linear-gradient(45deg, #0ce39a, #69007f, #fc0987);
+    border-radius: 9px;
+    transition: 0.5s;
+    opacity: 0;
+    filter: blur(20px);
+    }
+
+.btn-log:hover:after {
+    opacity: 1;
+}
+
+
+/* From Uiverse.io by cssbuttons-io */ 
+.btn-action {
+    padding: 8px 16px;
+    font-size: 15px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-action:hover {
+    transform: translateY(-7px);
+}
+
+.btn-action:active {
+    transform: translateY(-1px);
+}
+
+.btn-action-edit{
+    color: #ffffff;
+    background-color: #2746d3;
+    &:hover{
+        box-shadow: 0px 15px 18px rgba(88, 97, 219, 0.534);
+    }
+}
+
+.btn-action-del{
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #d82c2c;
+    &:hover{
+        background-color: #d82c2c;
+        box-shadow: 0px 15px 18px rgba(219, 54, 54, 0.4);
+    }
+}
+
+.btn-action-del-fill{
+    color: #ffffff;
+    background-color: #d82c2c;
+    &:hover{
+        background-color: #d82c2c;
+        box-shadow: 0px 15px 18px rgba(219, 54, 54, 0.4);
+    }
+}
+
+.btn-action-comfirm-edit{
+    color: #ffffff;
+    background-color: #298aca;
+    &:hover{
+        box-shadow: 0px 15px 18px rgba(70, 147, 199, 0.534);
+    }
+}
+
+.btn-action-add{
+    color: #ffffff;
+    background-color: #292929;
+    border: 2px solid #c0ff1481;;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    &:hover{
+        // box-shadow: 0px 15px 18px rgba(70, 199, 167, 0.534);
+        border-color: #c0ff14; 
+        box-shadow: 0 0 25px rgba(231, 255, 20, 0.527), 
+                    0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+}
+
+.btn-action-cancel-edit{
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #686868;
+    &:hover{
+        background-color: #686868;
+        box-shadow: 0px 15px 18px rgba(143, 143, 143, 0.4);
+    }
+}
+
