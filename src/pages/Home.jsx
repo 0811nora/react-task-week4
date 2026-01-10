@@ -111,7 +111,7 @@ export default function Home() {
                 }else{
                     navigate('/login')
                 }
-            }catch(err){
+            }catch{
                 navigate('/login')
             }
         }
