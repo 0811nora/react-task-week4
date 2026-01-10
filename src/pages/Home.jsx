@@ -209,7 +209,6 @@ export default function Home() {
             setIsPass(false);
             return;
         }
-
         try{
             const res = await postNewProduct(newProduct)
             setIsPass(true);
@@ -319,27 +318,19 @@ export default function Home() {
                                                         ? <tbody >
                                                             <tr>
                                                                 <td style={{width:"120px"}}>產品名稱</td>
-                                                                <td >
-                                                                    <input type="text" className="form-control w-100" value={productDetail?.title} name="title" onChange={handleEditInputChange}/>
-                                                                </td>
+                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.title} name="title" onChange={handleEditInputChange}/></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>類別</td>
-                                                                <td >
-                                                                    <input type="text" className="form-control w-100" value={productDetail?.category} name="category" onChange={handleEditInputChange}/>
-                                                                </td>
+                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.category} name="category" onChange={handleEditInputChange}/></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>原價</td>
-                                                                <td >
-                                                                    <input type="text" className="form-control w-100" value={productDetail?.origin_price  || 0} name="origin_price" onChange={handleEditInputChange}/> 
-                                                                </td>
+                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.origin_price  || 0} name="origin_price" onChange={handleEditInputChange}/> </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>售價</td>
-                                                                <td >
-                                                                    <input type="text" className="form-control w-100" value={productDetail?.price || 0}name="price" onChange={handleEditInputChange}/>
-                                                                </td>
+                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.price || 0}name="price" onChange={handleEditInputChange}/></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>啟用狀態</td>
@@ -498,27 +489,19 @@ export default function Home() {
                                 <tbody >
                                         <tr>
                                             <td style={{width:"110px"}}>產品名稱</td>
-                                            <td >
-                                                <input type="text" className="form-control w-100" value={newProduct?.title} name="title" onChange={handleAddInputChange}/>
-                                            </td>
+                                            <td ><input type="text" className="form-control w-100" value={newProduct?.title} name="title" onChange={handleAddInputChange}/></td>
                                         </tr>
                                         <tr>
                                             <td>類別</td>
-                                            <td >
-                                                <input type="text" className="form-control w-100" value={newProduct?.category} name="category" onChange={handleAddInputChange}/>
-                                            </td>
+                                            <td ><input type="text" className="form-control w-100" value={newProduct?.category} name="category" onChange={handleAddInputChange}/></td>
                                         </tr>
                                         <tr>
                                             <td>原價</td>
-                                            <td >
-                                                <input type="text" className="form-control w-100" value={newProduct?.origin_price || 0} name="origin_price" onChange={handleAddInputChange}/> 
-                                            </td>
+                                            <td ><input type="text" className="form-control w-100" value={newProduct?.origin_price || 0} name="origin_price" onChange={handleAddInputChange}/> </td>
                                         </tr>
                                         <tr>
                                             <td>售價</td>
-                                            <td >
-                                                <input type="text" className="form-control w-100" value={newProduct?.price || 0} name="price" onChange={handleAddInputChange}/>
-                                            </td>
+                                            <td ><input type="text" className="form-control w-100" value={newProduct?.price || 0} name="price" onChange={handleAddInputChange}/></td>
                                         </tr>
                                         <tr>
                                             <td>啟用狀態</td>
@@ -535,16 +518,11 @@ export default function Home() {
                                         </tr>
                                         <tr>
                                             <td>描述</td>
-                                            <td >
-                                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={newProduct?.description} name="description" onChange={handleAddInputChange}></textarea>
-                                            </td>
-                                            
+                                            <td><textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={newProduct?.description} name="description" onChange={handleAddInputChange}></textarea></td>
                                         </tr>
                                         <tr>
                                             <td scope="col" >說明</td>
-                                            <td >
-                                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={newProduct?.content} name="content" onChange={handleAddInputChange}></textarea>
-                                            </td>
+                                            <td ><textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={newProduct?.content} name="content" onChange={handleAddInputChange}></textarea></td>
                                         </tr>
                                     </tbody>
 
