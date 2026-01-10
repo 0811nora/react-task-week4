@@ -1,11 +1,10 @@
 .home-card{
-    background-color: #050505a2;
+    background-color: #0505055e;
     backdrop-filter: blur(20px);
     border-radius: 20px;
     padding: 30px 10px;
     overflow: hidden;
     max-width: 1200px; 
-    height: 850px;
 
     th{
         background-color: #141414ce;
@@ -31,6 +30,8 @@
         border-bottom: 3px solid #5c5c5cf6;
         border-radius: 0;
     }
+
+    
 
 
 
@@ -61,7 +62,7 @@
 
     .view-section {
         width: 50%;
-        padding: 1.4rem 2rem;
+        padding: 1rem 2rem;
         flex-shrink: 0;
     }
 
@@ -80,5 +81,26 @@
 
 
     
+}
+
+.add-card{
+    background-color: transparent;
+    overflow: hidden;
+    max-width: 1200px; 
+    th{
+        background-color: transparent;
+        color: $white;
+        padding: 20px 20px;
+        border-bottom:1px solid #000000ec;
+        backdrop-filter: blur(20px);
+    }
+    td{
+        padding: 20px 20px;
+        background-color:transparent;
+        color: $white;
+        border-bottom:1px solid #000000ec;
+    }
+    scrollbar-width: thin; 
+    scrollbar-color: rgba(70, 70, 70, 0.74) transparent; 
 }
 

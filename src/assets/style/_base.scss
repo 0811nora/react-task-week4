@@ -19,14 +19,10 @@
         height: 150vmax;
         top: 50%;
         left: 50%;
-        
-        // background-image: url('../images/milad-fakurian-oaUyvNPU5lc-unsplash.jpg');
-        // background-image: url('../images/andy-holmes-rCbdp8VCYhQ-unsplash.jpg');
-        background-image: url('../images/david-foodphototasty-ggvytBO8ru0-unsplash.jpg');
-        // background-image: url('../images/monkey-sexy-LNHyPbfEE7Y-unsplash.jpg');
+        background-image: url('../images/boliviainteligente-UrOeJ0cLXAw-unsplash.jpg');
         background-position: center;
         background-size: cover;
-        animation: rotateBackground 35s linear  infinite alternate;
+        animation: rotateBackground 40s linear  infinite alternate;
     }
 }
 
@@ -51,8 +47,8 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.041); 
-    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0); 
+    backdrop-filter: blur(8px);
     z-index: -1; 
     pointer-events: none; 
 }

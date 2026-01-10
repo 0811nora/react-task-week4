@@ -28,11 +28,24 @@ export const getProducts = () =>{
     return axios.get(`${apiUrl}/api/${path}/admin/products/all`);
 };
 
+// [adm] POST-新增單一產品
+export const postNewProduct = (content) =>{
+    return axios.post(`${apiUrl}/api/${path}/admin/product`, {
+        data: content
+    });
+};
+
 // [adm] PUT-修改單一產品
-export const putSingleProduct = (id,data,content) =>{
+export const putSingleProduct = (id,content) =>{
     return axios.put(`${apiUrl}/api/${path}/admin/product/${id}`, {
         data: content
     });
 };
+
+// [adm] PUT-修改單一產品
+export const delSingleProduct = (id) =>{
+    return axios.delete(`${apiUrl}/api/${path}/admin/product/${id}`);
+};
+
 
 
