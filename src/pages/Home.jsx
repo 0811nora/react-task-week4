@@ -87,18 +87,10 @@ export default function Home() {
     const getProductList = async () =>{
         try{
             const res = await getProducts();
-            console.log(res)
             setProduct(Object.values(res.data.products))
         }catch(err){
             errorNotify(err)
     }}
-
-    //看資料區，記得刪掉
-    useEffect( () => {
-        console.log('單一產品資料',productDetail)
-        console.log('新增產品資料',newProduct)
-    },[productDetail,newProduct])
-
 
     
     
@@ -120,7 +112,6 @@ export default function Home() {
                     navigate('/login')
                 }
             }catch(err){
-                console.log(err)
                 navigate('/login')
             }
         }
@@ -170,7 +161,6 @@ export default function Home() {
 
     const handleAddInputChange = (e) => {
         const {name , value} = e.target;
-        console.log(name,value)
         const nameIsNumber = ["is_enabled","origin_price","price"]
         setNewProduct({
             ...newProduct,
@@ -236,7 +226,6 @@ export default function Home() {
     const handleDelProduct = async (id) => {
         try{
             const res = await delSingleProduct(id);
-            console.log(res.data.message)
             setIsDelModalOpen(false);
             setView('list');
             getProductList();
