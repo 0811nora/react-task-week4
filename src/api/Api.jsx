@@ -48,4 +48,9 @@ export const delSingleProduct = (id) =>{
 };
 
 
+// [adm] POST-上傳圖片
+export const upload = (content) =>{
+    return axios.post(`${apiUrl}/api/${path}/admin/upload`, content);
+};
+
 

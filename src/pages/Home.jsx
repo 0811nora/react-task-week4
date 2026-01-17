@@ -1,54 +1,16 @@
 import { useEffect,  useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProducts , userCheck , userLogout , putSingleProduct, postNewProduct , delSingleProduct } from '../api/Api';
+import { getProducts , userCheck , userLogout , putSingleProduct, postNewProduct , delSingleProduct ,upload } from '../api/Api';
 import { successNotify , errorNotify } from '../layout/BaseFunc.jsx';
 import CustomModal from '../Components/CustomModal.jsx';
+import ProductDetail from "../Components/ProductDetail.jsx";
+import ProductTable from "../Components/ProductTable.jsx";
+import Header from "../Components/Header.jsx";
+import YesOrNoBtn from "../Components/YesOrNoBtn.jsx";
+import ModalBtn from "../Components/ModalBtn.jsx";
 
 
-const PhotoGroup = ({data ,isEdit , handleEditImgChange ,handleEditInputChange}) => {
-    return (
-        <div className=" d-flex  flex-column gap-1 photo-area "> 
-            {isEdit
-                ? (<>
-                    <div className="  flex-shrink-1 mb-4">
-                        <div className="">
-                            <label htmlFor="image1" className="form-label text-white">圖片1</label>
-                            <input type="text" className="form-control" id="image1" name="imageUrl"  value={data?.imageUrl}  onChange={handleEditInputChange}/>
-                        </div>
-                    </div>
-                        {data?.imagesUrl?.map((item,index) =>(
-                            <div className=" flex-shrink-1 mb-4" key={index}>
-                                <div className="">
-                                    <label 
-                                        htmlFor={`image${index+1}`} 
-                                        className="form-label text-white">
-                                            {`圖片${index+2}`}
-                                    </label>
-                                    <input 
-                                        type="text" className="form-control" 
-                                        id={`image${index+1}`} 
-                                        name="imagesUrl" value={item || ""} 
-                                        onChange={(e)=>handleEditImgChange(index,e.target.value)}/>
-                                </div>
-                            </div>)
-                        )}
-                    </>) 
-                : (<>
-                    <div className=" photo-item flex-shrink-1">
-                    <img src={data?.imageUrl} alt="" />
-                        </div >
-                        {data?.imagesUrl?.map((item,index) =>(
-                            <div className="photo-item flex-shrink-1" key={index}>
-                                <img src={item} alt="商品圖片" />
-                            </div>)
-                        )}
-                </>)
-            }
-        
-            
-        </div>
-    )
-}
+
 
 export default function Home() {
 
@@ -57,19 +19,22 @@ export default function Home() {
         content: "",
         description: "", 
         imageUrl: "",
-        imagesUrl:[],
+        imagesUrl:["","",""],
         is_enabled: 1,
         origin_price : null,
         price: null, 
         title: "", 
-        unit: "個"
+        unit: "個",
+        rating: 0,
     }
+
+
     
     
     const navigate = useNavigate();
     const token = document.cookie.split("; ").find((row) => row.startsWith("noraToken="))?.split("=")[1];
 
-    const [isLoading , setIsLoading] = useState(true);
+    const [ isLoading , setIsLoading ] = useState(true);
     const [ products , setProduct ] = useState([]);
     const [ productDetail, setProductDetail ] = useState();
     const [ originalDetail, setOriginalDetail ] = useState();
@@ -77,13 +42,22 @@ export default function Home() {
     const [ view , setView ] = useState('list');
     const [ isEdit , setIsEdit ] = useState(false);
     const [ isPass , setIsPass ] = useState(true);
-
+    const [ previewImage , setPreviewImage ] = useState([]);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [isDelModalOpen, setIsDelModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
 
 
+    useEffect(() => {
+        console.log(previewImage);
+        console.log(newProduct)
+        console.log(productDetail);
+    },[previewImage,productDetail,newProduct])
+
+
+
+    // 取得產品列表API
     const getProductList = async () =>{
         try{
             const res = await getProducts();
@@ -94,6 +68,7 @@ export default function Home() {
 
     
     
+    // 登入判斷
     useEffect(() => {
 
         if(!token){
@@ -104,7 +79,6 @@ export default function Home() {
         const checkState = async () =>{
             try{
                 const res = await userCheck();
-
                 if(res.data.success){
                     getProductList();
                     setIsLoading(false);
@@ -119,6 +93,8 @@ export default function Home() {
         checkState();
     },[navigate,token])
 
+
+    // loading 圖示
     if (isLoading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
@@ -128,6 +104,7 @@ export default function Home() {
     }
 
 
+    // 單一產品比對ID
     const findSingleProduct = (id) =>{
         setProductDetail(products.find(item => item.id === id));
         setOriginalDetail(products.find(item => item.id === id));
@@ -135,54 +112,55 @@ export default function Home() {
         
     }
 
+    //產品細節返回產品列表
     const handleBack = () => {
         setView('list');
         setIsEdit(false);
     };
 
-    
-    const handleEditInputChange = (e) =>{
+
+    // input 修改時存資料 (新增 / 編輯)
+    const handleInputChange = (e) =>{
         const {name , value} = e.target;
         const nameIsNumber = ["is_enabled","origin_price","price"]
-        setProductDetail({
-            ...productDetail,
-            [name] : nameIsNumber.includes(name) ? (Number(value) || 0 ) : value
-        })
+        const finalValue =  nameIsNumber.includes(name) ? (Number(value) || 0 ) : value
+
+        if(isAddModalOpen){
+            setNewProduct( pre => ({...pre, [name]:finalValue}))
+        }else{
+            setProductDetail( pre => ({...pre, [name]:finalValue}))
+        }
+        
     }
 
-    const handleEditImgChange = (index , value) =>{
-        const newImages = [...productDetail.imagesUrl]
-        newImages[index] = value;
-        setProductDetail({
-            ...productDetail,
-            imagesUrl: newImages
-        })
-    }
 
-    const handleAddInputChange = (e) => {
-        const {name , value} = e.target;
-        const nameIsNumber = ["is_enabled","origin_price","price"]
-        setNewProduct({
-            ...newProduct,
-            [name] : nameIsNumber.includes(name) ? (Number(value) || 0 ) : value
-        })
-    }
+    // 刪除編輯狀態下的圖片預覽
+    const handleImgDel = (index) => {
+        const setState = isAddModalOpen ? setNewProduct : setProductDetail;
+        const currentProduct = isAddModalOpen ? newProduct : productDetail;
 
-    const handleAddImgChange = (index , value) =>{
-        const newImages = [...newProduct.imagesUrl]
-        newImages[index] = value;
-        setNewProduct({
-            ...newProduct,
-            imagesUrl: newImages
+        setState((pre) => {
+            if(index === 0){
+                return {...pre,imageUrl:""}
+            }
+
+            const newImages = [...currentProduct.imagesUrl];
+            newImages[index-1] = "";
+
+            return {...pre,imagesUrl: newImages}
         })
+
+        setPreviewImage(pre => ({...pre, [index]: null}))
     }
 
 
 
-    const handleEditProduct = async(id) => {
+    // 編輯完畢，送出資料
+    const handleEditProduct = async(id, data = productDetail) => {
         try{
-            const res = await putSingleProduct(id,productDetail)
-            setProductDetail(productDetail);
+            const res = await putSingleProduct(id,data)
+            console.log(res.data)
+            setProductDetail(data);
             setIsUpdateModalOpen(false);
             setIsEdit(false);
             getProductList();
@@ -194,16 +172,20 @@ export default function Home() {
         }
     }
 
+    // 取消編輯
     const handleEditCancel = () => {
         setProductDetail(originalDetail);
         setIsEdit(false);
+        setPreviewImage([]);
     }
 
+    // 取消新增
     const handleAddCancel = () => {
         setNewProduct(productData);
         setIsAddModalOpen(false);
     }
 
+    // 新增單一產品
     const sendNewProduct = async() => {
         if(Object.values(newProduct).includes("") || Object.values(newProduct).includes(null)){
             setIsPass(false);
@@ -212,16 +194,19 @@ export default function Home() {
         try{
             const res = await postNewProduct(newProduct)
             setIsPass(true);
-            setNewProduct({...productData,imagesUrl:[]});
+            setNewProduct(productData);
+            setPreviewImage([]);
             getProductList();
             successNotify(res.data.message);
             setIsAddModalOpen(false);
+
         }catch(err){
             errorNotify(err.data.message)
         }
         
     }
 
+    // 刪除單一產品
     const handleDelProduct = async (id) => {
         try{
             const res = await delSingleProduct(id);
@@ -234,6 +219,7 @@ export default function Home() {
         }
     }
 
+    // 登出
     const handleLogout = async () =>{
         try{
             const res = await userLogout();
@@ -242,6 +228,53 @@ export default function Home() {
         }catch(err){
             errorNotify(err.data.message)
         }
+    }
+
+
+
+    // 上傳圖片到圖庫，並且取得圖片連結
+    const handleupload = async(index,file) => {
+        const  formData = new FormData();
+        formData.append('file-to-upload', file)
+
+        try{
+            const res = await upload(formData);
+            console.log("網址列",res.data.imageUrl)
+            const newUrl = res.data.imageUrl;
+
+            const setState = isAddModalOpen ? setNewProduct : setProductDetail;
+            const currentProduct = isAddModalOpen ? newProduct : productDetail;
+
+
+            let updateData = { 
+                ...currentProduct, 
+                imagesUrl: [...(currentProduct.imagesUrl || [])] 
+            };
+
+            if(index === 0){
+                updateData.imageUrl = newUrl
+            }else{
+                updateData.imagesUrl[index-1] = newUrl;
+            }
+            setState(updateData);
+
+        }catch(err){
+            console.log('上傳錯誤',err)
+        }
+    }
+
+    // 取得上傳圖片時的預覽圖片網址
+    const handleFileChange = (e ,index) => {
+        const file = e.target.files[0]
+        const preview = URL.createObjectURL(e.target.files[0]);
+        console.log(index , preview)
+
+        setPreviewImage({
+            ...previewImage,
+            [index]:preview
+        })
+
+        handleupload(index,file)
     }
 
 
@@ -256,49 +289,21 @@ export default function Home() {
             <div className="d-flex justify-content-center align-items-center min-vh-100 ">
                 <div className="home-card" style={{height:"850px"}}>
 
-                    <div className="d-flex justify-content-end align-items-center px-5 mt-2 position-relative">
-                        <h1 className="text-white position-absolute start-50 translate-middle-x m-0">產品列表</h1>
-                        <div className="">
-                            <button className="btn-log btn-logout" onClick={handleLogout}><span>登出</span></button>
-                        </div>
-                    </div>
+                    <Header handleLogout={handleLogout}/>
                     
 
                     <div className={`sliding-container ${view === 'detail' ? 'show-detail' : ''}` } >
-
                         <div className="view-section">
                             <div className="container">
                                 <div className="mb-2">
-                                    <button className="btn-action btn-action-add" onClick={()=>setIsAddModalOpen(true)}><i className="bi bi-plus-circle me-2"></i>新增產品</button>
+                                    <button className="btn-action btn-action-add" 
+                                        onClick={()=>setIsAddModalOpen(true)}>
+                                        <i className="bi bi-plus-circle me-2"></i>新增產品</button>
                                 </div>
-                                <div className=" table-responsive" style={{ maxHeight: '620px', overflowY: 'auto' }}>
-                                    <table className="table  align-middle ">
-                                        <thead className="sticky-top" >
-                                            <tr>
-                                                <th scope="col">產品名稱</th>
-                                                <th scope="col" className="text-center">類別</th>
-                                                <th scope="col" className="text-center" >售價</th>
-                                                <th scope="col" className="text-center" >啟用狀態</th>
-                                                <th scope="col" className="text-center">內容</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {products.map((item) => (
-                                                <tr key={item.id}>
-                                                    <td>{item.title}</td>
-                                                    <td className="text-center">{item.category}</td>
-                                                    <td className="text-center">$ {item.price.toLocaleString()}</td>
-                                                    <td className="text-center">{item.is_enabled ? <i className="bi bi-check-circle-fill text-success"></i> : <i className="bi bi-x-circle-fill text-danger"></i> }</td>
-                                                    <td className="text-center">
-                                                        <button className="btn btn-dark-light" onClick={() => findSingleProduct(item.id)}>詳情</button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                    
-                                        </tbody>
-                                    </table>
-                                </div>
-
+                                <ProductTable 
+                                    products={products}
+                                    findSingleProduct={findSingleProduct}
+                                />
                             </div>
                         </div>
                         <div className="view-section">
@@ -307,110 +312,36 @@ export default function Home() {
                                     <div className="mb-3">
                                         <button className="btn text-white fs-5 btn-border" onClick={handleBack}><i className="bi bi-arrow-left me-2" ></i>返回列表</button>
                                     </div>
-                                    <div className="row align-items-center">
-                                        <div className="col-5">
-                                            <PhotoGroup data={productDetail} isEdit={isEdit} handleEditImgChange={handleEditImgChange} handleEditInputChange={handleEditInputChange}/>
-                                        </div>
-                                        <div className="col-7">
-                                            <div className=" table-responsive" style={{ maxHeight: '530px', overflowY: 'auto' }}>
-                                                <table className="table ">
-                                                    {isEdit  
-                                                        ? <tbody >
-                                                            <tr>
-                                                                <td style={{width:"120px"}}>產品名稱</td>
-                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.title} name="title" onChange={handleEditInputChange}/></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>類別</td>
-                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.category} name="category" onChange={handleEditInputChange}/></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>原價</td>
-                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.origin_price  || 0} name="origin_price" onChange={handleEditInputChange}/> </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>售價</td>
-                                                                <td ><input type="text" className="form-control w-100" value={productDetail?.price || 0}name="price" onChange={handleEditInputChange}/></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>啟用狀態</td>
-                                                                <td>
-                                                                    <div className="form-check form-check-inline">
-                                                                        <input className="form-check-input" type="radio" name="is_enabled" id="product-on" value="1" checked={productDetail?.is_enabled === 1} onChange={handleEditInputChange}/>
-                                                                        <label className="form-check-label" htmlFor="product-on">啟用</label>
-                                                                    </div>
-                                                                    <div className="form-check form-check-inline">
-                                                                        <input className="form-check-input" type="radio" name="is_enabled" id="product-off" value="0" checked={productDetail?.is_enabled === 0} onChange={handleEditInputChange}/>
-                                                                        <label className="form-check-label" htmlFor="product-off">停用</label>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>描述</td>
-                                                                <td >
-                                                                    <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={productDetail?.description} name="description" onChange={handleEditInputChange}></textarea>
-                                                                </td>
-                                                                
-                                                            </tr>
-                                                            <tr>
-                                                                <td scope="col" >說明</td>
-                                                                <td >
-                                                                    <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={productDetail?.content} name="content" onChange={handleEditInputChange}></textarea>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
 
-                                                        :<tbody >
-                                                            <tr>
-                                                                <td style={{width:"120px"}}>產品名稱</td>
-                                                                <td >{productDetail?.title}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>類別</td>
-                                                                <td>{productDetail?.category}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>原價</td>
-                                                                <td>$ {productDetail?.origin_price?.toLocaleString()}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>售價</td>
-                                                                <td>$ {productDetail?.price?.toLocaleString()}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>啟用狀態</td>
-                                                                <td>{productDetail?.is_enabled ? <i className="bi bi-check-circle-fill text-success"></i> : <i className="bi bi-x-circle-fill text-danger"></i> }</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>描述</td>
-                                                                <td>{productDetail?.description}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td scope="col" >說明</td>
-                                                                <td>{productDetail?.content}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    }
-                                                    
-                                                </table>
-                                            </div>
+                                    <ProductDetail 
+                                        productDetail={productDetail} 
+                                        isEdit={isEdit}
+                                        handleFileChange={handleFileChange}
+                                        previewImage={previewImage}
+                                        handleImgDel={handleImgDel}
+                                        handleInputChange={handleInputChange}
+                                    />
 
-                                            
-                                        </div>
-                                    </div>
                                     <div className="d-flex justify-content-center  mt-5" style={{gap:"100px"}}>
                                         {isEdit
-                                            ? (<><button className="btn-action btn-action-cancel-edit"onClick={handleEditCancel}>
-                                                <i className="bi bi-x-octagon me-2"></i>取消編輯</button>
-                                                <button className="btn-action btn-action-comfirm-edit"  onClick={() => setIsUpdateModalOpen(true)}>
-                                                    <i className="bi bi-check-circle me-2"></i>確認更改</button>
+                                            ? (<>
+                                                < YesOrNoBtn 
+                                                    cancel={handleEditCancel} 
+                                                    confirm={() => setIsUpdateModalOpen(true)} 
+                                                    cancelText="取消編輯" confirmText="確認更改"
+                                                    style={null}
+                                                />
                                                     
-                                                </>)
-                                            : (<><button className="btn-action btn-action-del" onClick={()=>{setIsDelModalOpen(true)}}>
-                                                <i className="bi bi-trash me-2"></i>刪除產品</button>
-                                            <button className=" btn-action btn-action-edit" onClick={()=>setIsEdit(true)}>
-                                                <i className="bi bi-pencil-square me-2"></i>編輯產品
-                                            </button>
+                                            </>)
+                                            : (<>
+
+                                                < YesOrNoBtn 
+                                                    cancel={()=>{setIsDelModalOpen(true)}} 
+                                                    confirm={()=>setIsEdit(true)} 
+                                                    cancelText="刪除產品" 
+                                                    confirmText="編輯產品"
+                                                    style="btn-action-del"
+                                            />
                                             </>)
                                         }
                                         
@@ -431,8 +362,14 @@ export default function Home() {
             title="是否更新產品資料？"
             footer={(
             <>
-                <button className="btn-action btn-action-cancel-edit" onClick={() => setIsUpdateModalOpen(false)}>取消</button>
-                <button className="btn-action btn-action-comfirm-edit" onClick={()=>handleEditProduct(productDetail.id)}>確認更新</button>
+
+                < ModalBtn 
+                    cancel={() => setIsUpdateModalOpen(false)}
+                    confirm={()=> handleEditProduct(productDetail.id)}
+                    cancelText="取消"
+                    confirmText="確認更新"
+                />
+
             </>
             )}
         >
@@ -445,8 +382,12 @@ export default function Home() {
             title="是否刪除產品？"
             footer={(
             <>
-                <button className="btn-action btn-action-cancel-edit" onClick={() => setIsDelModalOpen(false)}>取消</button>
-                <button className="btn-action btn-action-del-fill" onClick={()=> handleDelProduct(productDetail.id)}>確認刪除</button>
+                < ModalBtn 
+                    cancel={() => setIsDelModalOpen(false)}
+                    confirm={()=> handleDelProduct(productDetail.id)}
+                    cancelText="取消"
+                    confirmText="確認刪除"
+                />
             </>
             )}
         >
@@ -459,93 +400,24 @@ export default function Home() {
             size="lg"
             title="新增產品"
         >
-            <div className="add-card" >
-                <div className="row align-items-center">
-                    <div className="col-5">
-                        <div className=" d-flex  flex-column gap-1 photo-area "> 
-                            <div className="  flex-shrink-1 mb-4">
-                                <div className="mb-3">
-                                    <label htmlFor="image1" className="form-label text-white">圖片1</label>
-                                    <input type="text" className="form-control" id="image1" name="imageUrl"  value={newProduct?.imageUrl || ""} onChange={handleAddInputChange}/>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="image2" className="form-label text-white">圖片2</label>
-                                    <input type="text" className="form-control" id="image2" name="imagesUrl"  value={newProduct?.imagesUrl[0] || ""} onChange={(e) => handleAddImgChange(0,e.target.value)}/>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="image3" className="form-label text-white">圖片3</label>
-                                    <input type="text" className="form-control" id="image3" name="imagesUrl"  value={newProduct?.imagesUrl[1] || ""} onChange={(e) => handleAddImgChange(1,e.target.value)}/>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="image4" className="form-label text-white">圖片4</label>
-                                    <input type="text" className="form-control" id="image4" name="imagesUrl"  value={newProduct?.imagesUrl[2] || ""} onChange={(e) => handleAddImgChange(2,e.target.value)}/>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                    <div className="col-7">
-                        <div className=" table-responsive" style={{ maxHeight: '530px', overflowY: 'auto' }}>
-                            <table className="table ">
-                                <tbody >
-                                        <tr>
-                                            <td style={{width:"110px"}}>產品名稱</td>
-                                            <td ><input type="text" className="form-control w-100" value={newProduct?.title} name="title" onChange={handleAddInputChange}/></td>
-                                        </tr>
-                                        <tr>
-                                            <td>類別</td>
-                                            <td ><input type="text" className="form-control w-100" value={newProduct?.category} name="category" onChange={handleAddInputChange}/></td>
-                                        </tr>
-                                        <tr>
-                                            <td>原價</td>
-                                            <td ><input type="text" className="form-control w-100" value={newProduct?.origin_price || 0} name="origin_price" onChange={handleAddInputChange}/> </td>
-                                        </tr>
-                                        <tr>
-                                            <td>售價</td>
-                                            <td ><input type="text" className="form-control w-100" value={newProduct?.price || 0} name="price" onChange={handleAddInputChange}/></td>
-                                        </tr>
-                                        <tr>
-                                            <td>啟用狀態</td>
-                                            <td>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="is_enabled" id="product-on" value="1" checked={newProduct?.is_enabled === 1}  onChange={handleAddInputChange}/>
-                                                    <label className="form-check-label" htmlFor="product-on">啟用</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="is_enabled" id="product-off" value="0" checked={newProduct?.is_enabled === 0}  onChange={handleAddInputChange}/>
-                                                    <label className="form-check-label" htmlFor="product-off">停用</label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>描述</td>
-                                            <td><textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={newProduct?.description} name="description" onChange={handleAddInputChange}></textarea></td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="col" >說明</td>
-                                            <td ><textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={newProduct?.content} name="content" onChange={handleAddInputChange}></textarea></td>
-                                        </tr>
-                                    </tbody>
-
-                                    
-                                
-                                
-                            </table>
-                        </div>
-
-                        
-                    </div>
-                </div>
+            <div className="add-card home-card" >
+                <ProductDetail 
+                    productDetail={newProduct} 
+                    isEdit={true}
+                    handleFileChange={handleFileChange}
+                    previewImage={previewImage}
+                    handleImgDel={handleImgDel}
+                    handleInputChange={handleInputChange}
+                />
                 {isPass ? "" : <p className="text-center text-danger">所有欄位皆須填寫！</p>}
-                
-                <div className="d-flex justify-content-center  mt-3" style={{gap:"100px"}}>
-                    <button className="btn-action btn-action-cancel-edit"onClick={handleAddCancel}>
-                        <i className="bi bi-x-octagon me-2"></i>取消新增
-                    </button>
-                    <button className="btn-action btn-action-comfirm-edit"  onClick={sendNewProduct}>
-                        <i className="bi bi-check-circle me-2"></i>新增商品
-                    </button>
 
-                </div>
+                < YesOrNoBtn 
+                    cancel={handleAddCancel} 
+                    confirm={sendNewProduct} 
+                    cancelText="取消新增" 
+                    confirmText="新增商品"
+                    style={null}
+                />
 
 
             </div>
@@ -554,4 +426,5 @@ export default function Home() {
 
     </>)
 }
+
 

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const CustomModal = ({ isOpen, onClose, title, children, footer, size = 'md'  }) => {
     if (!isOpen) return null; 
