@@ -159,7 +159,6 @@ export default function Home() {
     const handleEditProduct = async(id, data = productDetail) => {
         try{
             const res = await putSingleProduct(id,data)
-            console.log(res.data)
             setProductDetail(data);
             setIsUpdateModalOpen(false);
             setIsEdit(false);
@@ -239,7 +238,6 @@ export default function Home() {
 
         try{
             const res = await upload(formData);
-            console.log("網址列",res.data.imageUrl)
             const newUrl = res.data.imageUrl;
 
             const setState = isAddModalOpen ? setNewProduct : setProductDetail;
