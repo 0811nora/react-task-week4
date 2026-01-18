@@ -6,5 +6,8 @@ export default function Header({handleLogout}){
                 <button className="btn-log btn-logout" onClick={handleLogout}><span>登出</span></button>
             </div>
         </div>
+
+
+
     </>)
 }

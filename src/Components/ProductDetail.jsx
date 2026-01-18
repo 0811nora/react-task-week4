@@ -47,7 +47,7 @@ export default function ProductDetail({
                                 </tr>
                                 <tr>
                                     <td>評價</td>
-                                    <td ><input type="text" className="form-control w-100" value={productDetail?.rating} name="rating" onChange={handleInputChange}/></td>
+                                    <td ><input type="number" className="form-control w-100" min="0" value={productDetail?.rating} name="rating" onChange={handleInputChange}/></td>
                                 </tr>
                                 <tr>
                                     <td>類別</td>
@@ -55,11 +55,11 @@ export default function ProductDetail({
                                 </tr>
                                 <tr>
                                     <td>原價</td>
-                                    <td ><input type="text" className="form-control w-100" value={productDetail?.origin_price  || 0} name="origin_price" onChange={handleInputChange}/> </td>
+                                    <td ><input type="number" className="form-control w-100" min="0" value={productDetail?.origin_price  || 0} name="origin_price" onChange={handleInputChange}/> </td>
                                 </tr>
                                 <tr>
                                     <td>售價</td>
-                                    <td ><input type="text" className="form-control w-100" value={productDetail?.price || 0}name="price" onChange={handleInputChange}/></td>
+                                    <td ><input type="number" className="form-control w-100" min="0" value={productDetail?.price || 0}name="price" onChange={handleInputChange}/></td>
                                 </tr>
                                 <tr>
                                     <td>啟用狀態</td>

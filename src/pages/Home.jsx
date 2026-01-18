@@ -49,12 +49,8 @@ export default function Home() {
 
 
 
-    useEffect(() => {
-        console.log(previewImage);
-        console.log(newProduct)
-        console.log(productDetail);
-    },[previewImage,productDetail,newProduct])
 
+    
 
 
     // 取得產品列表API
@@ -129,6 +125,7 @@ export default function Home() {
             setNewProduct( pre => ({...pre, [name]:finalValue}))
         }else{
             setProductDetail( pre => ({...pre, [name]:finalValue}))
+            setOriginalDetail( pre => ({...pre, [name]:finalValue}))
         }
         
     }
@@ -143,10 +140,8 @@ export default function Home() {
             if(index === 0){
                 return {...pre,imageUrl:""}
             }
-
             const newImages = [...currentProduct.imagesUrl];
             newImages[index-1] = "";
-
             return {...pre,imagesUrl: newImages}
         })
 
@@ -157,13 +152,16 @@ export default function Home() {
 
     // 編輯完畢，送出資料
     const handleEditProduct = async(id, data = productDetail) => {
+        
         try{
             const res = await putSingleProduct(id,data)
+            setIsPass(true);
             setProductDetail(data);
             setIsUpdateModalOpen(false);
             setIsEdit(false);
             getProductList();
             successNotify(res.data.message);
+
 
         }catch(err){
             errorNotify(err.data.message)
@@ -239,7 +237,6 @@ export default function Home() {
         try{
             const res = await upload(formData);
             const newUrl = res.data.imageUrl;
-
             const setState = isAddModalOpen ? setNewProduct : setProductDetail;
             const currentProduct = isAddModalOpen ? newProduct : productDetail;
 
@@ -255,6 +252,7 @@ export default function Home() {
                 updateData.imagesUrl[index-1] = newUrl;
             }
             setState(updateData);
+            setPreviewImage([]);
 
         }catch(err){
             console.log('上傳錯誤',err)
@@ -265,7 +263,6 @@ export default function Home() {
     const handleFileChange = (e ,index) => {
         const file = e.target.files[0]
         const preview = URL.createObjectURL(e.target.files[0]);
-        console.log(index , preview)
 
         setPreviewImage({
             ...previewImage,
@@ -282,6 +279,8 @@ export default function Home() {
 
 
     return ( <>
+
+    
 
         <div className="container ">
             <div className="d-flex justify-content-center align-items-center min-vh-100 ">
@@ -319,8 +318,10 @@ export default function Home() {
                                         handleImgDel={handleImgDel}
                                         handleInputChange={handleInputChange}
                                     />
+                                    
 
-                                    <div className="d-flex justify-content-center  mt-5" style={{gap:"100px"}}>
+                                    <div className="d-flex justify-content-center mt-4" style={{gap:"100px"}}>
+                                        
                                         {isEdit
                                             ? (<>
                                                 < YesOrNoBtn 
@@ -363,7 +364,7 @@ export default function Home() {
 
                 < ModalBtn 
                     cancel={() => setIsUpdateModalOpen(false)}
-                    confirm={()=> handleEditProduct(productDetail.id)}
+                    confirm={()=> {handleEditProduct(productDetail.id)}}
                     cancelText="取消"
                     confirmText="確認更新"
                 />
